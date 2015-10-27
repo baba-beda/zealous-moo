@@ -1,10 +1,13 @@
-\documentclass[fleqn]{article}
+\documentclass[fleqn, 10pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[russian, english]{babel}
 \usepackage[T2A]{fontenc}
 \usepackage{mathtools}
 \usepackage{units}
 \usepackage{pgfplots}
+\pgfplotsset{compat=1.9}
+\usepgfplotslibrary{fillbetween}
+\newcommand\abs[1]{\left|#1\right|}
 
 \title{Типовой расчет по Теории Вероятности}
 \author{Зенкова Дарья, M3336}
@@ -23,23 +26,52 @@
 \paragraph{Задача}
 В коробке лежат карандаши: двенадцать красных и восемь зеленых. Наудачу извлекают три. Какова вероятность того, что среди извлечённых будет хотя бы один красный карандаш?
 \subparagraph{Решение}
-\begin{align*}
-N_{\text{кр}} =&\ 12 \\ 
-N_{\text{з}} =&\ 8 \\
-\Omega =&\ \{\text{Все возможные сочетания трех карандашей}\} \\
-\textbf{card}\ \Omega =&\ C^3_{20} = \frac{20!}{3!\cdot17!} = \frac{18\cdot19\cdot20}{6} = 3\cdot19\cdot20\ = 1140 \\
-A =&\ \{\text{Хотя бы один из трех карандашей - красный}\} \\
-\overline{A} =&\ \{\text{Среди трех карандашей нет ни одного красного}\} \\
-\textbf{card}\ \overline{A} =&\ C^3_{8} = \frac{8!}{3!\cdot5!} = \frac{6\cdot7\cdot8}{6} = 56 \\
-p(A) =&\ 1 - p(\overline{A}) = 1 - \frac{\textbf{card}\ \overline{A}}{\textbf{card}\ \Omega} = 1 - \frac{56}{1140} = \frac{271}{285}
-\end{align*}
-\subparagraph{Ответ} \(\frac{271}{285}\)
-  
+\[N_{\text{кр}} =\ 12\] 
+\[N_{\text{з}} =\ 8\]
+\[\Omega =\ \{\text{Все возможные сочетания трех карандашей}\}\]
+\[\abs{\Omega} =\ C^3_{20} = \frac{20!}{3!\cdot17!} = \frac{18\cdot19\cdot20}{6} = 3\cdot19\cdot20\ = 1140 \]
+\[A =\ \{\text{Хотя бы один из трех карандашей - красный}\} \]
+\[\overline{A} =\ \{\text{Среди трех карандашей нет ни одного красного}\} \]
+\[\abs{\overline{A}} =\ C^3_{8} = \frac{8!}{3!\cdot5!} = \frac{6\cdot7\cdot8}{6} = 56\]
+\[p(A) =\ 1 - p(\overline{A}) = 1 - \frac{\abs{\overline{A}}}{\abs{\Omega}} = 1 - \frac{56}{1140} = \frac{271}{285}\]
+\subparagraph{Ответ} \[\frac{271}{285}\]
+\newpage
+
 \section{Геометрические вероятности.}
 \paragraph{Задача}
 Из промежутка \({[{-2}, 2]}\) наудачу выбраны два числа \(\xi_1\) и \(\xi_2\). Найти вероятность того, что квадратное уравнение \(x^2+\xi_1x+\xi_2=0\) будет иметь вещественные корни.
-\paragraph{Решение}
-  
+\subparagraph{Решение}
+\[\Omega =\ \{{-2}\leq\xi_1\leq2, {-2}\leq\xi_2\leq2\}\]
+Уравнение \(x^2+\xi_1x+\xi_2=0\) имеет вещественные корни \(\iff D = \xi_1^2 - 4\xi_2 \geq 0\). \\
+Таким образом, \(A = \ \{\xi_2 \leq \frac{\xi_1^2}{4}, {-2}\leq\xi_1\leq2, {-2}\leq\xi_2\leq2\}\).\\
+
+\begin{tikzpicture} 
+  \begin{axis}[
+      axis equal, axis lines = middle, axis line style ={->},
+	xlabel = {$\xi_1$},
+	ylabel = {$\xi_2$},
+  xmin = -2.5,
+  xmax = 2.5,
+  ymin = -2.5,
+  ymax = 2.5]
+    \addplot[name path = square,domain = -4.0:4.0,color=blue,mark=none] coordinates {
+      (-2,-2)
+      (-2, 2)
+      (2, 2)
+      (2, -2)
+      (-2,-2)
+      } \closedcycle;
+    \addplot[name path = f,domain=-4.0:4.0,color=red,mark=none]{x^2 / 4};
+    \addplot[blue, fill opacity = 0.1] fill between[of = square and f, soft clip = {domain=-2:2},];
+    
+    
+\end{axis}
+\end{tikzpicture}
+\[\mu(\Omega) = (2 - (-2))\cdot(2 - (-2)) = 16\]
+\[\mu(A) = (2 - (-2))\cdot 2 + \int_{-2}^{2}\frac{\xi_1^2}{4}\,\mathrm{d}\xi_1 = 8 + \left.\frac{\xi_1^3}{12}\right|_{-2}^2 = 8 + \frac{8}{12} - (-\frac{8}{12}) = \frac{28}{3}\]
+\[p(A) = \frac{\mu(A)}{\mu(\Omega)} = \frac{28}{3\cdot16} = \frac{7}{12}\]
+\subparagraph{Ответ}
+\[\frac{7}{12}\]
 \section{Формула полной вероятности. Формула Байеса.}
 \paragraph{Задача}
 Два стрелка \(A\) и \(B\) поочередно стреляют в мишень до первого попадания, но не более двух раз каждый. Вероятноть попадания при одном выстреле для \(A\) равна \(0.8\), для \(B\) -- \(0.6\). Первый стрелок опеределяется по жребию. Для этого кидается игральный кубик. Если выпадает число, кратное трём, то начинает \(A\), иначе первым стреляет \(B\). В результате стрельбы выиграл стрелок \(B\). Какова вероятность, что он стрелял первым?
