@@ -1,9 +1,10 @@
-\documentclass{article}
+\documentclass[fleqn]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[russian, english]{babel}
 \usepackage[T2A]{fontenc}
 \usepackage{mathtools}
 \usepackage{units}
+\usepackage{pgfplots}
 
 \title{Типовой расчет по Теории Вероятности}
 \author{Зенкова Дарья, M3336}
@@ -21,7 +22,18 @@
 
 \paragraph{Задача}
 В коробке лежат карандаши: двенадцать красных и восемь зеленых. Наудачу извлекают три. Какова вероятность того, что среди извлечённых будет хотя бы один красный карандаш?
-\paragraph{Решение}
+\subparagraph{Решение}
+\begin{align*}
+N_{\text{кр}} =&\ 12 \\ 
+N_{\text{з}} =&\ 8 \\
+\Omega =&\ \{\text{Все возможные сочетания трех карандашей}\} \\
+\textbf{card}\ \Omega =&\ C^3_{20} = \frac{20!}{3!\cdot17!} = \frac{18\cdot19\cdot20}{6} = 3\cdot19\cdot20\ = 1140 \\
+A =&\ \{\text{Хотя бы один из трех карандашей - красный}\} \\
+\overline{A} =&\ \{\text{Среди трех карандашей нет ни одного красного}\} \\
+\textbf{card}\ \overline{A} =&\ C^3_{8} = \frac{8!}{3!\cdot5!} = \frac{6\cdot7\cdot8}{6} = 56 \\
+p(A) =&\ 1 - p(\overline{A}) = 1 - \frac{\textbf{card}\ \overline{A}}{\textbf{card}\ \Omega} = 1 - \frac{56}{1140} = \frac{271}{285}
+\end{align*}
+\subparagraph{Ответ} \(\frac{271}{285}\)
   
 \section{Геометрические вероятности.}
 \paragraph{Задача}
