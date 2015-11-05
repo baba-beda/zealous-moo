@@ -1,6 +1,5 @@
 package lab_cf_grammar;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
@@ -29,74 +28,79 @@ public class B {
     }
 
     void solve() {
-        int n = in.nextInt();
-        char st = in.next().charAt(0);
-        in.nextLine();
-        CFGrammar grammar = new CFGrammar();
-        for (int i = 0; i < n; i++) {
-            String rule = in.nextLine();
-            rule = rule.replaceAll(" ", "");
-            String[] splitted = rule.split("->");
-            String right = "";
-            if (splitted.length == 2) {
-                right = splitted[1];
-            }
-            grammar.addRule(splitted[0].charAt(0), right);
-        }
-        ArrayList<Character> ans = new ArrayList<>();
-        ans.addAll(grammar.getEpsRules(st));
-        Collections.sort(ans);
-
-        for (char c : ans) {
+        CFGrammar grammar = parseGrammar();
+        grammar.checkEps();
+        ArrayList<Character> arrayList = new ArrayList<>(grammar.epsRules);
+        Collections.sort(arrayList);
+        for (char c : arrayList) {
             out.print(c + " ");
         }
+    }
+
+    CFGrammar parseGrammar() {
+        int n = in.nextInt();
+        CFGrammar grammar = new CFGrammar(in.next().charAt(0));
+        in.nextLine();
+        for (int i = 0; i < n; i++) {
+            String[] rule = in.nextLine().replaceAll(" ", "").split("->");
+            String right = "";
+            if (rule.length == 2) {
+                right = rule[1];
+            }
+            grammar.addRule(rule[0].charAt(0), right);
+            if (rule.length == 1) {
+                grammar.addEpsRule(rule[0].charAt(0));
+            }
+        }
+        return grammar;
     }
 
     class CFGrammar {
         HashMap<Character, HashSet<String>> rules = new HashMap<>();
         HashSet<Character> epsRules = new HashSet<>();
-        void addRule(char c, String next) {
-            if (!rules.containsKey(c)) {
-                rules.put(c, new HashSet<>());
-            }
-            rules.get(c).add(next);
-        }
-        boolean isTerminal(char c) {
-            return Character.isLowerCase(c);
+        char st;
+
+        CFGrammar(char st) {
+            this.st = st;
         }
 
-        public HashSet<Character> getEpsRules(char st) {
-            isEps(st);
-            return epsRules;
+        boolean isNonTerminal(char c) {
+            return Character.isUpperCase(c);
         }
 
-        boolean isEpsBfs(char st) {
-
-            return false;
+        void addEpsRule(char c) {
+            epsRules.add(c);
         }
-        boolean isEps (char c) {
-            if (isTerminal(c)) {
-                return false;
+        void addRule(char left, String right) {
+            if (!rules.containsKey(left)) {
+                rules.put(left, new HashSet<>());
             }
-            if (rules.get(c).contains("") || epsRules.contains(c)) {
-                return true;
-            }
-            boolean ans = false;
-            for (String right : rules.get(c)) {
-                boolean auxAns = true;
-                for (char ch : right.toCharArray()) {
-                    boolean is = isEps(ch);
-                    auxAns &= is;
-                    if (is) {
-                        epsRules.add(ch);
+            rules.get(left).add(right);
+        }
+
+        void checkEps() {
+            HashSet<Character> aux = new HashSet<>();
+            aux.addAll(epsRules);
+            while (true) {
+                for (Map.Entry<Character, HashSet<String>> entry : rules.entrySet()) {
+                    for (String right : entry.getValue()) {
+                        boolean auxEps = true;
+                        for (char c : right.toCharArray()) {
+                            auxEps &= epsRules.contains(c);
+                        }
+                        if (auxEps) {
+                            aux.add(entry.getKey());
+                            break;
+                        }
                     }
                 }
-                ans |= auxAns;
+                if (aux.equals(epsRules)) {
+                    break;
+                }
+                else {
+                    epsRules = new HashSet<>(aux);
+                }
             }
-            if (ans) {
-                epsRules.add(c);
-            }
-            return ans;
         }
     }
 }
