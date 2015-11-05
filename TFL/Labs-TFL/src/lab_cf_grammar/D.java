@@ -1,20 +1,24 @@
 package lab_cf_grammar;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Created by  baba_beda on 11/5/15.
  */
 public class D {
-    public static void main(String[] args) {
-        new D().run();
-    }
-
     Scanner in;
     PrintWriter out;
     int MODULO = 1000000007;
+
+    public static void main(String[] args) {
+        new D().run();
+    }
 
     void run() {
         try {
@@ -62,6 +66,7 @@ public class D {
         boolean isNonTerminal(char c) {
             return Character.isUpperCase(c);
         }
+
         void addRule(char left, String right) {
             if (!rules.containsKey(left)) {
                 rules.put(left, new HashSet<>());
@@ -103,8 +108,9 @@ public class D {
                     }
                 }
             }
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
+            for (int m = 0; m < n; m++) {
+                for (int i = 0; i < n - m; i++) {
+                    int j = i + m;
                     for (Map.Entry<Character, HashSet<String>> entry : rules.entrySet()) {
                         int a = nonTerminals.get(entry.getKey());
                         for (String right : entry.getValue()) {
