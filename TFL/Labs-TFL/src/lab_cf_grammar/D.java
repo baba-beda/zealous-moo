@@ -108,7 +108,7 @@ public class D {
                     }
                 }
             }
-            for (int m = 0; m < n; m++) {
+            for (int m = 1; m < n; m++) {
                 for (int i = 0; i < n - m; i++) {
                     int j = i + m;
                     for (Map.Entry<Character, HashSet<String>> entry : rules.entrySet()) {
@@ -120,6 +120,7 @@ public class D {
                                 for (int k = i; k < j; k++) {
                                     dynamic[a][i][j] +=
                                             dynamic[b][i][k] * dynamic[c][k + 1][j];
+                                    dynamic[a][i][j] %= MODULO;
                                 }
                             }
                         }
