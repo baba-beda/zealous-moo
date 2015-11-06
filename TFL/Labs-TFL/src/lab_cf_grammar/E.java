@@ -1,10 +1,13 @@
 package lab_cf_grammar;
 
 
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by  baba_beda on 11/5/15.
@@ -30,7 +33,7 @@ public class E {
 
     void solve() {
         CFGrammar grammar = parseGrammar();
-        grammar.deleteLongRules();
+        grammar.transformToNormalForm();
     }
 
     CFGrammar parseGrammar() {
@@ -44,16 +47,6 @@ public class E {
                 right = rule[1];
             }
             grammar.addRule(rule[0], right);
-            boolean containsOnlyTerminals = true;
-            for (char c : right.toCharArray()) {
-                if (Character.isUpperCase(c)) {
-                    containsOnlyTerminals = false;
-                    break;
-                }
-            }
-            if (containsOnlyTerminals) {
-                grammar.generatingRules.add(rule[0]);
-            }
             if (rule.length == 1) {
                 grammar.epsRules.add(rule[0]);
             }
@@ -65,8 +58,9 @@ public class E {
         HashMap<String, HashSet<ArrayList<String>>> rules = new HashMap<>();
         HashSet<String> generatingRules = new HashSet<>();
         HashSet<String> reachableRules = new HashSet<>();
-        HashSet<String> nonTerminals = new HashSet<>();
+        HashMap<String, Integer> nonTerminals = new HashMap<>();
         HashSet<String> epsRules = new HashSet<>();
+        HashSet<ChainRule> chainRules = new HashSet<>();
 
         String st;
 
@@ -74,8 +68,8 @@ public class E {
             this.st = st;
         }
 
-        boolean isNonTerminal(char c) {
-            return Character.isUpperCase(c);
+        boolean isNonTerminal(String s) {
+            return Character.isUpperCase(s.charAt(0));
         }
 
         void addRule(String left, String right) {
@@ -85,6 +79,9 @@ public class E {
             ArrayList<String> lexems = new ArrayList<>();
             for (char c : right.toCharArray()) {
                 lexems.add(Character.toString(c));
+            }
+            if (right.equals("")) {
+                lexems.add("");
             }
             rules.get(left).add(lexems);
         }
@@ -107,10 +104,25 @@ public class E {
                             newRules.put(newSt, new HashSet<>());
                             aux.clear();
                         }
-                        aux.add(right.get(right.size() - 2));
-                        aux.add(right.get(right.size() - 1));
-                        newRules.get(lastSt).add((ArrayList<String>)aux.clone());
-                        aux.clear();
+                        String s1 = right.get(right.size() - 2);
+                        String s2 = right.get(right.size() - 1);
+                        if (!isNonTerminal(s1) && !isNonTerminal(s2)) {
+                            String newSt = entry.getKey() + Integer.toString(count++);
+                            aux.add(s1);
+                            aux.add(newSt);
+                            newRules.get(lastSt).add((ArrayList<String>) aux.clone());
+                            aux.clear();
+                            aux.add(s2);
+                            newRules.put(newSt, new HashSet<>());
+                            newRules.get(newSt).add((ArrayList<String>) aux.clone());
+                            aux.clear();
+                        }
+                        else {
+                            aux.add(s1);
+                            aux.add(s2);
+                            newRules.get(lastSt).add((ArrayList<String>) aux.clone());
+                            aux.clear();
+                        }
                     }
                     else {
                         newRules.get(entry.getKey()).add(right);
@@ -118,6 +130,7 @@ public class E {
                 }
             }
             rules = new HashMap<>(newRules);
+            printRules();
         }
 
         void checkEps() {
@@ -146,8 +159,268 @@ public class E {
         }
 
         void deleteEpsRules() {
-            
+            checkEps();
+            HashMap<String, HashSet<ArrayList<String>>> newRules = new HashMap<>();
+            for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+                for (ArrayList<String> right : entry.getValue()) {
+                    HashSet<ArrayList<String>> whatToAdd = new HashSet<>();
+                    for (String term : right) {
+                        if (term.equals("")) {
+                            continue;
+                        }
+                        if (whatToAdd.isEmpty()) {
+                            whatToAdd.add(new ArrayList<>());
+                        }
+                        if (!epsRules.contains(term)) {
+                            for (ArrayList<String> list : whatToAdd) {
+                                list.add(term);
+                            }
+                        }
+                        else {
+                            HashSet<ArrayList<String>> aux = new HashSet<>();
+                            for (ArrayList<String> list : whatToAdd) {
+                                ArrayList<String> auxList = new ArrayList<>(list);
+                                auxList.add(term);
+                                aux.add(auxList);
+                            }
+                            whatToAdd.addAll(aux);
+                        }
+                    }
+                    if (whatToAdd.isEmpty()) {
+                        continue;
+                    }
+                    if (!newRules.containsKey(entry.getKey())) {
+                        newRules.put(entry.getKey(), new HashSet<>());
+                    }
+                    newRules.get(entry.getKey()).addAll(whatToAdd);
+                }
+            }
+            HashMap<String, HashSet<ArrayList<String>>> newNewRules = new HashMap<>();
+            for (Map.Entry<String, HashSet<ArrayList<String>>> entry : newRules.entrySet()) {
+                HashSet<ArrayList<String>> newRight = new HashSet<>();
+                for (ArrayList<String> right : entry.getValue()) {
+                    if (!right.isEmpty()) {
+                        newRight.add(right);
+                    }
+                }
+                if (!newRight.isEmpty()) {
+                    newNewRules.put(entry.getKey(), newRight);
+                }
+            }
+
+            rules = new HashMap<>(newNewRules);
+            printRules();
         }
 
+        void checkChainRules() {
+            collectNonTerminals();
+            chainRules.addAll(nonTerminals.keySet().stream().map(s -> new ChainRule(s, s)).collect(Collectors.toList()));
+            HashSet<ChainRule> aux = new HashSet<>(chainRules);
+            while (true) {
+                for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+                    for (ArrayList<String> right : entry.getValue()) {
+                        if (right.size() == 1 && isNonTerminal(right.get(0))) {
+                            for (ChainRule chainRule : chainRules) {
+                                if (chainRule.right.equals(entry.getKey())) {
+                                    aux.add(new ChainRule(chainRule.left, right.get(0)));
+                                }
+                            }
+                        }
+                    }
+                }
+                if (aux.equals(chainRules)) {
+                    break;
+                }
+                else {
+                    chainRules = new HashSet<>(aux);
+                }
+            }
+        }
+
+        void deleteChainRules() {
+            checkChainRules();
+            HashMap<String, HashSet<ArrayList<String>>> newRules = new HashMap<>();
+            for (ChainRule rule : chainRules) {
+                if (!newRules.containsKey(rule.left)) {
+                    newRules.put(rule.left, new HashSet<>());
+                }
+                for (ArrayList<String> right : rules.get(rule.right)) {
+                    if (right.size() != 1 || !isNonTerminal(right.get(0))) {
+                        newRules.get(rule.left).add(right);
+                    }
+                }
+            }
+            rules = new HashMap<>(newRules);
+            printRules();
+        }
+
+        void checkGenerating() {
+            for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+                for (ArrayList<String> right : entry.getValue()) {
+                    boolean containsOnlyTerminals = true;
+                    for (String s : right) {
+                        containsOnlyTerminals &= (!isNonTerminal(s));
+                    }
+                    if (containsOnlyTerminals) {
+                        generatingRules.add(entry.getKey());
+                        break;
+                    }
+                }
+            }
+            HashSet<String> aux = new HashSet<>(generatingRules);
+            while (true) {
+                for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+                    for (ArrayList<String> right : entry.getValue()) {
+                        boolean auxGen = true;
+                        for (String s : right) {
+                            auxGen &= generatingRules.contains(s);
+                        }
+                        if (auxGen) {
+                            aux.add(entry.getKey());
+                            break;
+                        }
+                    }
+                }
+                if (aux.equals(generatingRules)) {
+                    break;
+                }
+                else {
+                    generatingRules = new HashSet<>(aux);
+                }
+            }
+        }
+
+        void checkReachable() {
+            reachableRules.add(st);
+            HashSet<String> aux = new HashSet<>(reachableRules);
+            while (true) {
+                for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+                    if (reachableRules.contains(entry.getKey())) {
+                        for (ArrayList<String> right : entry.getValue()) {
+                            for (String s : right) {
+                                if (isNonTerminal(s)) {
+                                    aux.add(s);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (aux.equals(reachableRules)) {
+                    break;
+                }
+                else {
+                    reachableRules = new HashSet<>(aux);
+                }
+            }
+        }
+
+        void deleteUselessRules() {
+            checkGenerating();
+            checkReachable();
+            HashMap<String, HashSet<ArrayList<String>>> newRules = new HashMap<>();
+            for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+               if (generatingRules.contains(entry.getKey()) && reachableRules.contains(entry.getKey())) {
+                   if (!newRules.containsKey(entry.getKey())) {
+                       newRules.put(entry.getKey(), new HashSet<>());
+                   }
+                   for (ArrayList<String> right : entry.getValue()) {
+                       boolean aux = true;
+                       for (String rule : right) {
+                           if (isNonTerminal(rule)) {
+                               aux &= (generatingRules.contains(rule) && reachableRules.contains(rule));
+                           }
+                       }
+                       if (aux) {
+                           newRules.get(entry.getKey()).add(right);
+                       }
+                   }
+               }
+            }
+            rules = new HashMap<>(newRules);
+            printRules();
+        }
+
+        void transformToNormalForm() {
+            System.out.println("Start rules");
+            printRules();
+            System.out.println("Deleting long rules");
+            deleteLongRules();
+            System.out.println("Deleting eps rules");
+            deleteEpsRules();
+            System.out.println("Deleting chain rules");
+            deleteChainRules();
+            System.out.println("Deleting useless rules");
+            deleteUselessRules();
+            if (epsRules.contains(st)) {
+                rules.put(st + "'", new HashSet<>());
+                ArrayList<String> aux = new ArrayList<>();
+                aux.add("");
+                rules.get(st + "'").add(aux);
+            }
+        }
+
+
+
+        void collectNonTerminals() {
+            int count = 0;
+            for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+                if (!nonTerminals.containsKey(entry.getKey())) {
+                    nonTerminals.put(entry.getKey(), count++);
+                }
+                for (ArrayList<String> right : entry.getValue()) {
+                    for (String s : right) {
+                        if (isNonTerminal(s) && !nonTerminals.containsKey(s)) {
+                            nonTerminals.put(s, count++);
+                        }
+                    }
+                }
+            }
+        }
+        void printRules() {
+            for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+                for (ArrayList<String> right : entry.getValue()) {
+                    System.out.print(entry.getKey() + " -> ");
+                    right.forEach(System.out::print);
+                    System.out.println();
+                }
+            }
+        }
+        void printChainRules() {
+            for (ChainRule chainRule : chainRules) {
+                System.out.println(chainRule.toString());
+            }
+        }
+    }
+
+    class ChainRule {
+        String left, right;
+
+        public ChainRule(String left, String right) {
+            this.left = left;
+            this.right = right;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + left + ", " + right + ")";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ChainRule chainRule = (ChainRule) o;
+
+            return left.equals(chainRule.left) && right.equals(chainRule.right);
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = left.hashCode();
+            result = 31 * result + right.hashCode();
+            return result;
+        }
     }
 }
