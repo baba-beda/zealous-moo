@@ -20,6 +20,8 @@ public class E {
     Scanner in;
     PrintWriter out;
 
+    int MODULO = 1000000007;
+
     void run() {
         try {
             in = new Scanner(new FileInputStream(new File("cf" + ".in")));
@@ -34,6 +36,14 @@ public class E {
     void solve() {
         CFGrammar grammar = parseGrammar();
         grammar.transformToNormalForm();
+        if (grammar.checkWord(in.next())) {
+            System.out.println("yes");
+            out.print("yes");
+        }
+        else {
+            System.out.println("no");
+            out.print("no");
+        }
     }
 
     CFGrammar parseGrammar() {
@@ -62,6 +72,7 @@ public class E {
         HashSet<String> epsRules = new HashSet<>();
         HashSet<ChainRule> chainRules = new HashSet<>();
         HashMap<String, String> termsToNonTerms = new HashMap<>();
+        boolean[][][] dynamic;
 
         String st;
 
@@ -382,8 +393,6 @@ public class E {
             printRules();
         }
 
-
-
         void collectNonTerminals() {
             int count = 0;
             for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
@@ -408,9 +417,43 @@ public class E {
                 }
             }
         }
-        void printChainRules() {
-            for (ChainRule chainRule : chainRules) {
-                System.out.println(chainRule.toString());
+
+        boolean checkWord(String word) {
+            collectNonTerminals();
+            dynamic = new boolean[nonTerminals.size()][word.length()][word.length()];
+            fillDynamic(word);
+            return  (dynamic[nonTerminals.get(st)][0][word.length() - 1]);
+        }
+
+        void fillDynamic(String word) {
+            char[] wordCh = word.toCharArray();
+            int n = word.length();
+            for (int i = 0; i < n; i++) {
+                for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+                    ArrayList<String> aux = new ArrayList<>();
+                    aux.add(Character.toString(wordCh[i]));
+                    if (entry.getValue().contains(aux)) {
+                        dynamic[nonTerminals.get(entry.getKey())][i][i] = true;
+                    }
+                }
+            }
+            for (int m = 1; m < n; m++) {
+                for (int i = 0; i < n - m; i++) {
+                    int j = i + m;
+                    for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+                        int a = nonTerminals.get(entry.getKey());
+                        for (ArrayList<String> right : entry.getValue()) {
+                            if (right.size() == 2) {
+                                int b = nonTerminals.get(right.get(0));
+                                int c = nonTerminals.get(right.get(1));
+                                for (int k = i; k < j; k++) {
+                                    dynamic[a][i][j] |=
+                                            dynamic[b][i][k] & dynamic[c][k + 1][j];
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
