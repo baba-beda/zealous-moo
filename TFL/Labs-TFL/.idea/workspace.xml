@@ -80,21 +80,30 @@
       <file leaf-file-name="E.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/lab_cf_grammar/E.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.87135506">
-              <caret line="418" column="9" selection-start-line="418" selection-start-column="9" selection-end-line="418" selection-end-column="9" />
+            <state vertical-scroll-proportion="0.54888505">
+              <caret line="276" column="17" selection-start-line="276" selection-start-column="17" selection-end-line="276" selection-end-column="17" />
               <folding>
+                <element signature="e#323#324#0" expanded="true" />
+                <element signature="e#352#353#0" expanded="true" />
                 <element signature="method#addRule#0;class#CFGrammar#0;class#E#0" expanded="false" />
                 <element signature="method#deleteLongRules#0;class#CFGrammar#0;class#E#0" expanded="false" />
                 <element signature="method#checkEps#0;class#CFGrammar#0;class#E#0" expanded="false" />
-                <element signature="method#deleteEpsRules#0;class#CFGrammar#0;class#E#0" expanded="false" />
-                <element signature="method#deleteChainRules#0;class#CFGrammar#0;class#E#0" expanded="false" />
                 <element signature="method#checkGenerating#0;class#CFGrammar#0;class#E#0" expanded="false" />
                 <element signature="method#checkReachable#0;class#CFGrammar#0;class#E#0" expanded="false" />
                 <element signature="method#deleteUselessRules#0;class#CFGrammar#0;class#E#0" expanded="false" />
                 <element signature="method#changeTerminalsToNon#0;class#CFGrammar#0;class#E#0" expanded="false" />
                 <element signature="method#collectNonTerminals#0;class#CFGrammar#0;class#E#0" expanded="false" />
-                <element signature="method#printRules#0;class#CFGrammar#0;class#E#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="automaton.in" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/automaton.in">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="5" column="2" selection-start-line="5" selection-start-column="2" selection-end-line="5" selection-end-column="2" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -123,7 +132,7 @@
         <entry file="file://$PROJECT_DIR$/cf.in">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="3" column="2" selection-start-line="3" selection-start-column="2" selection-end-line="3" selection-end-column="2" />
+              <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -184,8 +193,8 @@
         <option value="$PROJECT_DIR$/src/lab_cf_grammar/C.java" />
         <option value="$PROJECT_DIR$/src/lab_cf_grammar/D.java" />
         <option value="$PROJECT_DIR$/nfc.in" />
-        <option value="$PROJECT_DIR$/cf.in" />
         <option value="$PROJECT_DIR$/src/lab_cf_grammar/E.java" />
+        <option value="$PROJECT_DIR$/cf.in" />
       </list>
     </option>
   </component>
@@ -707,12 +716,12 @@
       <workItem from="1446545108709" duration="4155000" />
       <workItem from="1446572692172" duration="28089000" />
       <workItem from="1446756335338" duration="11625000" />
-      <workItem from="1446807357540" duration="2932000" />
+      <workItem from="1446807357540" duration="4673000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="92415000" />
+    <option name="totallyTimeSpent" value="94156000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="12" y="37" width="1896" height="1031" extended-state="0" />
@@ -881,30 +890,42 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/lab_cf_grammar/E.java</url>
-          <line>331</line>
+          <line>345</line>
           <properties />
           <option name="timeStamp" value="44" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/lab_cf_grammar/E.java</url>
-          <line>281</line>
+          <line>295</line>
           <properties />
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/lab_cf_grammar/E.java</url>
-          <line>269</line>
+          <line>283</line>
           <properties />
           <option name="timeStamp" value="49" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/lab_cf_grammar/E.java</url>
-          <line>299</line>
+          <line>313</line>
           <properties />
           <option name="timeStamp" value="50" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/lab_cf_grammar/E.java</url>
+          <line>375</line>
+          <properties />
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/lab_cf_grammar/E.java</url>
+          <line>264</line>
+          <properties />
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="54" />
+      <option name="time" value="57" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1183,13 +1204,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/automaton.in">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="2" selection-start-line="5" selection-start-column="2" selection-end-line="5" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/equivalence.in">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1247,14 +1261,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nfc.in">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lab_cf_grammar/C.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.56426334">
@@ -1273,10 +1279,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lab_cf_grammar/B.java">
+    <entry file="file://$PROJECT_DIR$/cf.out">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="58" column="27" selection-start-line="58" selection-start-column="27" selection-end-line="58" selection-end-column="27" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nfc.in">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/automaton.in">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="5" column="2" selection-start-line="5" selection-start-column="2" selection-end-line="5" selection-end-column="2" />
           <folding />
         </state>
       </provider>
@@ -1291,38 +1313,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cf.in">
+    <entry file="file://$PROJECT_DIR$/src/lab_cf_grammar/B.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="2" selection-start-line="3" selection-start-column="2" selection-end-line="3" selection-end-column="2" />
+          <caret line="58" column="27" selection-start-line="58" selection-start-column="27" selection-end-line="58" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cf.out">
+    <entry file="file://$PROJECT_DIR$/cf.in">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lab_cf_grammar/E.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.87135506">
-          <caret line="418" column="9" selection-start-line="418" selection-start-column="9" selection-end-line="418" selection-end-column="9" />
+        <state vertical-scroll-proportion="0.54888505">
+          <caret line="276" column="17" selection-start-line="276" selection-start-column="17" selection-end-line="276" selection-end-column="17" />
           <folding>
+            <element signature="e#323#324#0" expanded="true" />
+            <element signature="e#352#353#0" expanded="true" />
             <element signature="method#addRule#0;class#CFGrammar#0;class#E#0" expanded="false" />
             <element signature="method#deleteLongRules#0;class#CFGrammar#0;class#E#0" expanded="false" />
             <element signature="method#checkEps#0;class#CFGrammar#0;class#E#0" expanded="false" />
-            <element signature="method#deleteEpsRules#0;class#CFGrammar#0;class#E#0" expanded="false" />
-            <element signature="method#deleteChainRules#0;class#CFGrammar#0;class#E#0" expanded="false" />
             <element signature="method#checkGenerating#0;class#CFGrammar#0;class#E#0" expanded="false" />
             <element signature="method#checkReachable#0;class#CFGrammar#0;class#E#0" expanded="false" />
             <element signature="method#deleteUselessRules#0;class#CFGrammar#0;class#E#0" expanded="false" />
             <element signature="method#changeTerminalsToNon#0;class#CFGrammar#0;class#E#0" expanded="false" />
             <element signature="method#collectNonTerminals#0;class#CFGrammar#0;class#E#0" expanded="false" />
-            <element signature="method#printRules#0;class#CFGrammar#0;class#E#0" expanded="false" />
           </folding>
         </state>
       </provider>

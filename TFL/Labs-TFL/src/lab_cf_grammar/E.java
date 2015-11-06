@@ -20,8 +20,6 @@ public class E {
     Scanner in;
     PrintWriter out;
 
-    int MODULO = 1000000007;
-
     void run() {
         try {
             in = new Scanner(new FileInputStream(new File("cf" + ".in")));
@@ -81,6 +79,9 @@ public class E {
         }
 
         boolean isNonTerminal(String s) {
+            if (s.isEmpty()) {
+                return false;
+            }
             return Character.isUpperCase(s.charAt(0));
         }
 
@@ -219,6 +220,17 @@ public class E {
                     newNewRules.put(entry.getKey(), newRight);
                 }
             }
+            if (epsRules.contains(st)) {
+                String newSt = st + "'";
+                newNewRules.put(newSt, new HashSet<>());
+                ArrayList<String> aux = new ArrayList<>();
+                aux.add(st);
+                newNewRules.get(newSt).add((ArrayList<String>) aux.clone());
+                aux.clear();
+                aux.add("");
+                newNewRules.get(newSt).add(aux);
+                st = newSt;
+            }
 
             rules = new HashMap<>(newNewRules);
             printRules();
@@ -256,9 +268,11 @@ public class E {
                 if (!newRules.containsKey(rule.left)) {
                     newRules.put(rule.left, new HashSet<>());
                 }
-                for (ArrayList<String> right : rules.get(rule.right)) {
-                    if (right.size() != 1 || !isNonTerminal(right.get(0))) {
-                        newRules.get(rule.left).add(right);
+                if (rules.containsKey(rule.right)) {
+                    for (ArrayList<String> right : rules.get(rule.right)) {
+                        if (right.size() != 1 || !isNonTerminal(right.get(0))) {
+                            newRules.get(rule.left).add(right);
+                        }
                     }
                 }
             }
@@ -410,11 +424,19 @@ public class E {
         }
         void printRules() {
             for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+                System.out.print(entry.getKey() + " -> ");
                 for (ArrayList<String> right : entry.getValue()) {
-                    System.out.print(entry.getKey() + " -> ");
-                    right.forEach(System.out::print);
-                    System.out.println();
+                    for (String s : right) {
+                        if (s.isEmpty()) {
+                            System.out.print("eps");
+                        }
+                        else {
+                            System.out.print(s);
+                        }
+                    }
+                    System.out.print(" | ");
                 }
+                System.out.println();
             }
         }
 
