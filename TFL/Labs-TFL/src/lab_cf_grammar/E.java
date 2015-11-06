@@ -61,6 +61,7 @@ public class E {
         HashMap<String, Integer> nonTerminals = new HashMap<>();
         HashSet<String> epsRules = new HashSet<>();
         HashSet<ChainRule> chainRules = new HashSet<>();
+        HashMap<String, String> termsToNonTerms = new HashMap<>();
 
         String st;
 
@@ -273,7 +274,7 @@ public class E {
                     for (ArrayList<String> right : entry.getValue()) {
                         boolean auxGen = true;
                         for (String s : right) {
-                            auxGen &= generatingRules.contains(s);
+                            auxGen &= (generatingRules.contains(s) || !isNonTerminal(s));
                         }
                         if (auxGen) {
                             aux.add(entry.getKey());
@@ -351,12 +352,34 @@ public class E {
             deleteChainRules();
             System.out.println("Deleting useless rules");
             deleteUselessRules();
-            if (epsRules.contains(st)) {
-                rules.put(st + "'", new HashSet<>());
-                ArrayList<String> aux = new ArrayList<>();
-                aux.add("");
-                rules.get(st + "'").add(aux);
+            System.out.println("Changing terminals in rules to NonTerminals");
+            changeTerminalsToNon();
+
+        }
+
+        void changeTerminalsToNon() {
+            for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+                for (ArrayList<String> right : entry.getValue()) {
+                    for (int i = 0; i < right.size(); i++) {
+                        String s = right.get(i);
+                        if (!isNonTerminal(s) && right.size() > 1) {
+                            if (!termsToNonTerms.containsKey(s)) {
+                                String newSt = Character.toUpperCase(s.charAt(0)) + "''";
+                                termsToNonTerms.put(s, newSt);
+                            }
+                            right.set(i, termsToNonTerms.get(s));
+                        }
+                    }
+                }
             }
+
+            for (Map.Entry<String, String> entry : termsToNonTerms.entrySet()) {
+                ArrayList<String> aux = new ArrayList<>();
+                rules.put(entry.getValue(), new HashSet<>());
+                aux.add(entry.getKey());
+                rules.get(entry.getValue()).add(aux);
+            }
+            printRules();
         }
 
 
