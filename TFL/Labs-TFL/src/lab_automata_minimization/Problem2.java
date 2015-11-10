@@ -1,6 +1,6 @@
 package lab_automata_minimization;
 
-
+import javax.swing.text.html.HTMLDocument;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
@@ -29,23 +29,24 @@ public class Problem2 {
     }
 
     void solve() {
-        Automata a1 = readAuto();
-        Automata a2 = readAuto();
-        visited1 = new boolean[a1.states];
-        visited2 = new boolean[a2.states];
+        Automaton a1 = readAuto();
+        Automaton a2 = readAuto();
         if (bfsEquivCheck(a1, a2)) {
-            out.println("YES");
+            System.out.println("YES");
+            out.print("YES");
         }
         else {
-            out.println("NO");
+            System.out.println("NO");
+            out.print("NO");
+
         }
     }
 
-    Automata readAuto() {
+    Automaton readAuto() {
         int n = in.nextInt();
         int m = in.nextInt();
         int k = in.nextInt();
-        Automata a = new Automata(n);
+        Automaton a = new Automaton(n);
         for (int i = 0; i < k; i++) {
             a.addTerminal(in.nextInt() - 1);
         }
@@ -58,40 +59,50 @@ public class Problem2 {
     boolean visited1[];
     boolean visited2[];
 
-    boolean bfsEquivCheck(Automata a1, Automata a2) {
+
+    boolean bfsEquivCheck(Automaton a1, Automaton a2) {
+        visited1 = new boolean[a1.states + 1];
+        visited2 = new boolean[a2.states + 1];
         ArrayDeque<Pair> queue = new ArrayDeque<>();
         queue.add(new Pair(0, 0));
         visited1[0] = true;
         visited2[0] = true;
         while (!queue.isEmpty()) {
-            Pair p = queue.poll();
-            int u = p.fst;
-            int v = p.snd;
+            Pair cur = queue.poll();
+            int u = cur.fst;
+            int v = cur.snd;
             if (a1.isTerminal(u) != a2.isTerminal(v)) {
                 return false;
             }
-            for (int c = 0; c < 26; c++) {
-                char ch = (char) ('a' + c);
-                if (a1.transfers[u].containsKey(ch) && !visited1[a1.transfers[u].get(ch)]
-                        || a2.transfers[v].containsKey(ch) && !visited2[a2.transfers[v].get(ch)]) {
-                    queue.add(new Pair(a1.transfers[u].get(ch), a2.transfers[v].get(ch)));
-                    visited1[a1.transfers[u].get(ch)] = true;
-                    visited2[a2.transfers[v].get(ch)] = true;
+            for (char c = 'a'; c < 'a' + 26; c++) {
+                int to1 = a1.canGo(u, c);
+                int to2 = a2.canGo(v, c);
+                if (!(to1 == a1.states && to2 == a2.states) && (!visited1[to1] || !visited2[to2])) {
+                    queue.add(new Pair(to1, to2));
+                    if (to1 != a1.states) {
+                        visited1[to1] = true;
+                    }
+                    if (to2 != a2.states) {
+                        visited2[to2] = true;
+                    }
                 }
             }
         }
         return true;
     }
-    class Automata {
+    class Automaton {
         HashSet<Integer> terminals;
         HashMap<Character, Integer>[] transfers;
         int states;
-        Automata(int states) {
+        Automaton(int states) {
             terminals = new HashSet<>();
             this.states = states;
-            transfers = new HashMap[states];
-            for (int i = 0; i < states; i++) {
+            transfers = new HashMap[states + 1];
+            for (int i = 0; i <= states; i++) {
                 transfers[i] = new HashMap<>();
+            }
+            for (char c = 'a'; c < 'a' + 26; c++) {
+                transfers[states].put(c, states);
             }
         }
         void addTransfer(int from, int to, char c) {
@@ -118,7 +129,7 @@ public class Problem2 {
             if (transfers[from].containsKey(c)) {
                 return transfers[from].get(c);
             }
-            return -1;
+            return states;
         }
 
         boolean accepts(char[] word) {

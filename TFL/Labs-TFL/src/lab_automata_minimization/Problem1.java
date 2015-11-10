@@ -31,8 +31,8 @@ public class Problem1 {
     }
 
     void solve() {
-        Automata a1 = readAuto();
-        Automata a2 = readAuto();
+        Automaton a1 = readAuto();
+        Automaton a2 = readAuto();
         visited1 = new boolean[a1.states];
         boolean ans = checkIsomorphism(a1, a2, 0, 0);
         if (ans) {
@@ -44,7 +44,7 @@ public class Problem1 {
     }
 
     boolean visited1[];
-    boolean checkIsomorphism(Automata a1, Automata a2, int u, int v) {
+    boolean checkIsomorphism(Automaton a1, Automaton a2, int u, int v) {
         visited1[u] = true;
         if (a1.isTerminal(u) != a2.isTerminal(v)) {
             return false;
@@ -63,11 +63,11 @@ public class Problem1 {
         return result;
     }
 
-    Automata readAuto() {
+    Automaton readAuto() {
         int n = in.nextInt();
         int m = in.nextInt();
         int k = in.nextInt();
-        Automata a = new Automata(n);
+        Automaton a = new Automaton(n);
         for (int i = 0; i < k; i++) {
             a.addTerminal(in.nextInt() - 1);
         }
@@ -77,11 +77,11 @@ public class Problem1 {
         return a;
     }
 
-    class Automata {
+    class Automaton {
         HashSet<Integer> terminals;
         HashMap<Character, Integer>[] transfers;
         int states;
-        Automata(int states) {
+        Automaton(int states) {
             terminals = new HashSet<>();
             this.states = states;
             transfers = new HashMap[states];
@@ -127,10 +127,7 @@ public class Problem1 {
                     return false;
                 }
             }
-            if (isTerminal(curState)) {
-                return true;
-            }
-            return false;
+            return isTerminal(curState);
         }
     }
 }

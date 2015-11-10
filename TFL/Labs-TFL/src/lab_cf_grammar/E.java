@@ -6,6 +6,7 @@ import com.sun.org.apache.xpath.internal.SourceTree;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,7 @@ public class E {
     }
 
     void solve() {
+        long start = System.currentTimeMillis();
         CFGrammar grammar = parseGrammar();
         grammar.transformToNormalForm();
         if (grammar.checkWord(in.next())) {
@@ -42,6 +44,8 @@ public class E {
             System.out.println("no");
             out.print("no");
         }
+        long finish = System.currentTimeMillis();
+        System.out.println((finish - start) / 1000);
     }
 
     CFGrammar parseGrammar() {
@@ -106,6 +110,19 @@ public class E {
                 newRules.put(entry.getKey(), new HashSet<>());
                 int count = 0;
                 for (ArrayList<String> right : entry.getValue()) {
+                    if (right.size() == 2 && !isNonTerminal(right.get(0)) && !isNonTerminal(right.get(1))) {
+                        String s1 = right.get(0);
+                        String s2 = right.get(1);
+                        String newSt = entry.getKey() + Integer.toString(count++);
+                        aux.add(s1);
+                        aux.add(newSt);
+                        newRules.get(entry.getKey()).add((ArrayList<String>) aux.clone());
+                        aux.clear();
+                        aux.add(s2);
+                        newRules.put(newSt, new HashSet<>());
+                        newRules.get(newSt).add((ArrayList<String>) aux.clone());
+                        aux.clear();
+                    }
                     if (right.size() > 2) {
                         String lastSt = entry.getKey();
                         for (int i = 0; i < right.size() - 2; i++) {
@@ -369,20 +386,32 @@ public class E {
         void transformToNormalForm() {
             System.out.println("Start rules");
             printRules();
-            System.out.println("Deleting long rules");
-            deleteLongRules();
             System.out.println("Deleting eps rules");
             deleteEpsRules();
             System.out.println("Deleting chain rules");
             deleteChainRules();
             System.out.println("Deleting useless rules");
             deleteUselessRules();
+            System.out.println("Deleting long rules");
+            deleteLongRules();
             System.out.println("Changing terminals in rules to NonTerminals");
             changeTerminalsToNon();
 
         }
+        void checkExisting() {
+            for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
+                for (ArrayList<String> right : entry.getValue()) {
+                    for (String s : right) {
+                        if (right.size() == 1 && !isNonTerminal(s)) {
+                            termsToNonTerms.put(s, entry.getKey());
+                        }
+                    }
+                }
+            }
+        }
 
         void changeTerminalsToNon() {
+            checkExisting();
             for (Map.Entry<String, HashSet<ArrayList<String>>> entry : rules.entrySet()) {
                 for (ArrayList<String> right : entry.getValue()) {
                     for (int i = 0; i < right.size(); i++) {
@@ -400,7 +429,9 @@ public class E {
 
             for (Map.Entry<String, String> entry : termsToNonTerms.entrySet()) {
                 ArrayList<String> aux = new ArrayList<>();
-                rules.put(entry.getValue(), new HashSet<>());
+                if (!rules.containsKey(entry.getValue())) {
+                    rules.put(entry.getValue(), new HashSet<>());
+                }
                 aux.add(entry.getKey());
                 rules.get(entry.getValue()).add(aux);
             }
