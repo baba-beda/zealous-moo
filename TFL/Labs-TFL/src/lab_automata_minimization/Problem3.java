@@ -1,6 +1,5 @@
 package lab_automata_minimization;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
@@ -34,6 +33,7 @@ public class Problem3 {
         a.addDevilishTransfers();
         a.addReturnTransfers();
         boolean[][] marked = buildTable(a);
+
         int[] component = new int[a.states + 1];
         Arrays.fill(component, -1);
         for (int i = 0; i <= a.states; i++) {
@@ -137,16 +137,18 @@ public class Problem3 {
             componentsAux.get(component[i]).add(i);
         }
         for (Map.Entry<Integer, HashSet<Integer>> entry : componentsAux.entrySet()) {
-            for (int r : entry.getValue()) {
-                if (source.isTerminal(r)) {
-                    result.addTerminal(entry.getKey());
-                    break;
+            if (entry.getKey() > 0) {
+                for (int r : entry.getValue()) {
+                    if (source.isTerminal(r)) {
+                        result.addTerminal(entry.getKey());
+                        break;
+                    }
                 }
             }
         }
         for (int i = 1; i <= source.states; i++) {
             for (Map.Entry<Character, Integer> entry : source.transfers[i].entrySet()) {
-                if (entry.getValue() > 0 && component[entry.getValue()] > 0) {
+                if (entry.getValue() > 0 && component[i] > 0 && component[entry.getValue()] > 0) {
                     result.addTransfer(component[i], component[entry.getValue()], entry.getKey());
                 }
             }
@@ -211,17 +213,6 @@ public class Problem3 {
         }
         boolean isTerminal(int t) {
             return terminals.contains(t);
-        }
-        boolean isDevilish(int t) {
-            if (t == -1) {
-                return true;
-            }
-            for (Map.Entry<Character, Integer> entry : transfers[t].entrySet()) {
-                if (entry.getValue() != t) {
-                    return false;
-                }
-            }
-            return true;
         }
         int canGo(int from, char c) {
             if (transfers[from].containsKey(c)) {
