@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -20,7 +21,7 @@ public class B {
             out = new PrintWriter(new File("crossover" + ".out"));
             solve();
             out.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -48,10 +49,12 @@ public class B {
             suffixes[i] = j;
         }
         boolean foundOne = false;
+        boolean foundTwo = false;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (prefixes[i] + suffixes[j] >= m) {
                     foundOne = true;
+                    foundTwo = true;
                     break;
                 }
             }
@@ -60,24 +63,28 @@ public class B {
             }
         }
         out.println(foundOne ? "YES" : "NO");
-        boolean foundTwo = false;
-        for (int i = 0; i < n; i++) {
-            String resMid = res.substring(prefixes[i], m - suffixes[i]);
-            for (int j = 0; j < n; j++) {
-                String parMid = parents[j].substring(prefixes[i], m - suffixes[i]);
-                if (resMid.equals(parMid)) {
-                    foundTwo = true;
+        if (!foundTwo) {
+            for (int i = 0; i < n; i++) {
+                if (prefixes[i] > m - suffixes[i]) {
+                    continue;
+                }
+                String resMid = res.substring(prefixes[i], m - suffixes[i]);
+                for (int j = 0; j < n; j++) {
+                    String parMid = parents[j].substring(prefixes[i], m - suffixes[i]);
+                    if (resMid.equals(parMid)) {
+                        foundTwo = true;
+                        break;
+                    }
+                }
+                if (foundTwo) {
                     break;
                 }
-            }
-            if (foundTwo) {
-                break;
             }
         }
         out.println(foundTwo ? "YES" : "NO");
         boolean foundLast = false;
         for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
+            for (int j = 0; j < n; j++) {
                 boolean[] equal = new boolean[m];
                 for (int k = 0; k < m; k++) {
                     equal[k] = (parents[i].charAt(k) == parents[j].charAt(k));

@@ -1,0 +1,68 @@
+#include <cstdlib>
+#include <iostream>
+#include <map>
+#include <set>
+#include <vector>
+#include <algorithm>
+#include <fstream>
+
+using namespace std;
+
+int main() {
+  FILE * fin;
+  FILE * fout;
+  fin = fopen("start.in", "r");
+  fout = fopen("start.out", "w");
+  
+  int n, m;
+  fscanf(fin, "%d %d", &m, &n);
+  int transfers[n][2];
+  char outs[n];
+  for (int i = 0; i < n; i++) {
+    int t0, t1;
+    char c;
+    fscanf(fin, "%d %d %c", &t0, &t1, &c);
+    transfers[i][0] = t0 - 1;
+    transfers[i][1] = t1 - 1;
+    outs[i] = c;
+  }
+
+  map<char, vector<int> > reverse[n];
+  for (int i = 0; i < n; i++) {
+    int from0 = transfers[i][0];
+    int from1 = transfers[i][1];
+    reverse[from0][outs[from0]].push_back(i);
+    reverse[from1][outs[from1]].push_back(i);
+  }
+
+  char word[m + 100];
+  fscanf(fin, "%s",  word);
+  
+  set<int> current;
+  for (int i = 0; i < n; i++) {
+    current.insert(i);
+  }
+  set<int> aux;
+  for (int i = m - 1; i >= 0; i--) {
+    aux.clear();
+    for (int st : current) {
+      if (reverse[st].find(word[i]) != reverse[st].end()) {
+	for (int to : reverse[st][word[i]]) {
+	  aux.insert(to);
+	}
+      }
+    }
+    current = aux;
+  }
+  fprintf(fout, "%d ", current.size());
+  vector<int> ans;
+  for (int st : current) {
+    ans.push_back(st + 1);
+  }
+  sort(ans.begin(), ans.end());
+  for (int st : ans) {
+    fprintf(fout, "%d ", st);
+  }
+  
+  return 0;
+}

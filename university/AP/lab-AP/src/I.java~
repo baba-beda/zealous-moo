@@ -1,0 +1,34 @@
+public class I {
+    Scanner in;
+
+    public static void main(String[] args) {
+	new I().run();
+    }
+
+    void run() {
+	try {
+	    in = new Scanner(System.in);
+	    solve();
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+    }
+
+    void solve() {
+	int n = in.nextInt();
+	int cur, lastCur;
+        char[] curString = new char[n];
+	Arrays.fill(curString, "0");
+	for (int i = 0; i < n; i++) {
+	    System.out.println(curString.toString());
+	    cur = in.nextInt();
+	    curString[i] = "1";
+	    System.out.println(curString.toString());
+	    lastCur = in.nextInt();
+	    if (lastCur < cur) {
+		curString[i] = "0";
+	    }
+	}
+    }
+}
+	

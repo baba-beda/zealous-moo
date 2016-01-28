@@ -1,0 +1,260 @@
+\documentclass[fleqn, 10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+\usepackage[T2A]{fontenc}
+\usepackage{mathtools}
+\usepackage{units}
+\newcommand\abs[1]{\left|#1\right|}
+\usepackage{pgfplots}
+
+\title{Типовой расчет по Теории Вероятностей}
+\author{Зенкова Дарья, M3336}
+\date{Вариант 2}
+
+\begin{document}
+\pagenumbering{gobble}
+\maketitle
+\newpage
+\pagenumbering{arabic}
+
+\section{Дискретные случайные величины.}
+
+\paragraph{Задача}
+Из коробки, в которой находятся 2 зеленых, 2 черных и 6 красных стержней, случайным образом извлекаются 4 стержня. Построить ряд распределения, найти функцию распределения, математическое ожидание, среднее квадратичное отклонение, моду и медиану числа извлеченных стержней красного цвета. Найти вероятность того, что при этом красных стержней будет:
+\begin{description}
+\item[а)] не менее трех;
+\item[б)] хотя бы один.
+\end{description}
+
+\subparagraph{Решение}
+Случайная величина ``количество извлеченных стержней красного цвета'' может принимать значения \(0, 1, 2, 3, 4\).
+\[p(X = 0) = \frac{4}{10}\cdot\frac{3}{9}\cdot\frac{2}{8}\cdot\frac{1}{7} = \frac{24}{5040} = \frac{1}{210}\]
+\[p(X = 1) = C_4^1\cdot\frac{6}{10}\cdot\frac{4}{9}\cdot\frac{3}{8}\cdot\frac{2}{7} = \frac{576}{5040} = \frac{4}{35}\]
+\[p(X = 2) = C_4^2\cdot\frac{6}{10}\cdot\frac{5}{9}\cdot\frac{4}{8}\cdot\frac{3}{7} = \frac{2160}{5040} = \frac{3}{7}\]
+\[p(X = 3) = C_4^3\cdot\frac{6}{10}\cdot\frac{5}{9}\cdot\frac{4}{8}\cdot\frac{4}{7} = \frac{1920}{5040} = \frac{8}{21}\]
+\[p(X = 4) = \frac{6}{10}\cdot\frac{5}{9}\cdot\frac{4}{8}\cdot\frac{3}{7} = \frac{360}{5040} = \frac{1}{14}\]
+
+Закон распределения случайной величины \(X\) выглядит следующим образом:
+\begin{center}
+\begin{tabular}{ | c | c  | c | c | c | c | }
+  \hline
+\(X\) & 0 & 1 & 2 & 3 & 4\\ [1ex] \hline
+\(p\) & \(\nicefrac{1}{210}\) & \(\nicefrac{4}{35}\) & \(\nicefrac{3}{7}\) & \(\nicefrac{8}{21}\) & \(\nicefrac{1}{14}\) \\ [1ex] \hline
+\end{tabular}
+\end{center}
+
+Функция распределения случайной величины \(X\):
+\begin{equation}
+  F(x)=\begin{cases}
+  0, & x \leq 0;\\
+  \nicefrac{1}{210}, & 0 < x \leq 1;\\
+  \nicefrac{5}{42}, & 1 < x \leq 2;\\
+  \nicefrac{23}{42}, & 2 < x \leq 3;\\
+  \nicefrac{13}{14}, & 3 < x \leq 4;\\
+  1, & 4 < x.
+  \end{cases}
+\end{equation}
+
+Математическое ожидание случайной величины \(X\):
+\[\textbf{E}X = \sum_{i=0}^4ip(X = i) = 0 \cdot \frac{1}{210} + 1 \cdot \frac{4}{35} + 2 \cdot \frac{3}{7} + 3 \cdot \frac{8}{21} + 4 \cdot \frac{1}{14} = \frac{12}{5} \]
+
+Математическое ожидание случайной величины \(X^2\):
+\[\textbf{E}\left(X^2\right) = \sum_{i=0}^4i^2p(X = i) = 0 \cdot \frac{1}{210} + 1 \cdot \frac{4}{35} + 4 \cdot \frac{3}{7} + 9 \cdot \frac{8}{21} + 16 \cdot \frac{1}{14} = \frac{32}{5}\]
+
+Дисперсия случайной величины \(X\):
+\[\textbf{D}X = \textbf{E}(X^2) - \textbf{E}X = \frac{32}{5} - \frac{12}{5} = 2\]
+
+Среднее квадратичное отклонение случайной величины \(X\):
+\[\sigma(X) = \sqrt{\textbf{D}X} = \sqrt{2}\]
+
+Наиболее вероятным значением случайной величины \(X\) является 2, следовательно:
+\[mod(X) = 2\]
+
+Медиана случайной величины \(X\):
+\[p\{X \leq 2\} = \frac{23}{42} \geq \frac{1}{2},\ p\{X \geq 2\} = \frac{37}{42} \geq \frac{1}{2} \implies med(X) = 2\]
+
+Искомые вероятности:
+\[\text{а)}\ p\{X \geq 3\} = F(\infty) - F(3) = \frac{19}{42} \]
+\[\text{б)}\ p\{X \geq 1\} = F(\infty) - F(1)  = \frac{209}{210}\]
+\newpage
+
+\section{Непрерывные случайные величины.}
+\paragraph{Задача}
+Функция распределения случайной величины X имеет вид:
+\begin{equation}
+  F(x)=\begin{cases}
+    0, & x\leq{0};\\
+    \nicefrac{x^2}{16}, & 0 < x \leq{2};\\
+    x-\nicefrac{7}{4}, & 2 < x \leq{\nicefrac{11}{4}};\\
+    1, & x > \nicefrac{11}{4}.
+  \end{cases}
+\end{equation}
+
+Найти:\begin{description}
+\item[а)] плотность распределения \(f(x)\), построить графики \(F(x)\) и \(f(x)\);
+\item[б)] математическое ожидание \(\textbf{E}X\), дисперсию \(\textbf{D}X\) и медиану \(med(X)\);
+\item[в)] \(\textbf{P}\left \{X \in [1; 1,5]\right \}\).
+\end{description}
+
+\subparagraph{Решение}
+\begin{description}
+\item[а)]
+Плотность распределения определяется следующим образом:
+  \[f(x) = F'(x)\]
+Следовательно:
+\begin{equation}
+  f(x) = \begin{cases}
+    \nicefrac{x}{8}, & 0 < x \leq{2};\\
+    1, & 2 < x \leq{\nicefrac{11}{4}};\\
+    0, & \text{иначе}.
+  \end{cases}
+\end{equation}
+График \(F(x)\):\\
+\begin{tikzpicture}
+  \begin{axis}[
+      axis equal, axis lines = middle, axis line style = {->},
+      xlabel = {\(x\)},
+      ylabel = {\(F(x)\)},
+      xmin = -4,
+      xmax = 4,
+      ymin = -4,
+      ymax = 4]
+    \addplot[domain=-5:0, color=red, mark=none, ultra thick]{0};
+    \addplot[domain=0:2, color=red, mark=none, ultra thick]{x^2/16};
+    \addplot[domain=2:2.75, color=red, mark=none, ultra thick]{x-1.75};
+    \addplot[domain=2.75:5, color=red, mark=none, ultra thick]{1};
+  \end{axis}
+\end{tikzpicture}
+
+График \(f(x)\): \\
+\begin{tikzpicture}
+  \begin{axis}[
+      axis equal, axis lines = middle, axis line style = {->},
+      xlabel = {\(x\)},
+      ylabel = {\(f(x)\)},
+      xmin = -4,
+      xmax = 4,
+      ymin = -4,
+      ymax = 4]
+    \addplot[domain=-5:0, color=red, mark=none, ultra thick]{0};
+    \addplot[domain=0:2, color=red, mark=none, ultra thick]{x/8};
+    \addplot[domain=2:2.75, color=red, mark=none, ultra thick]{1};
+    \addplot[domain=2.75:5, color=red, mark=none, ultra thick]{0};
+  \end{axis}
+\end{tikzpicture}
+
+\item[б)]
+  Формулы вычисления искомых величин:
+  \[\textbf{E}X = \int_{-\infty}^{\infty} xf(x) \,dx\]
+  \[\textbf{D}X = \textbf{E}(X^2) - (\textbf{E}X)^2\]
+  \[F\left(med\left(X\right)\right) = \nicefrac{1}{2}\]
+  Таким образом:
+  \[\textbf{E}X = \int_{0}^{2}\frac{x^2}{8}\,dx + \int_{2}^{\nicefrac{11}{4}} x\,dx = \frac{1}{3} + \frac{57}{32} = \frac{203}{96}\]
+  \[\textbf{E}(X^2) =  \int_{0}^{2}\frac{x^3}{8}\,dx + \int_{2}^{\nicefrac{11}{4}} x^2\,dx = \frac{1}{2} + \frac{273}{64} = \frac{305}{64}\]
+  \[\textbf{D}X = \frac{305}{64} - \left(\frac{203}{96}\right)^2 = \frac{2711}{9216}\]
+  \\
+  \[med(X) = m \implies F(m) = \frac{1}{2} \implies 2 < m \leq{\frac{11}{4}} \implies \]
+  \[\implies m - \frac{7}{4} = \frac{1}{2} \implies m = \frac{9}{4}\]
+\item[в)]
+  Вероятность попадания \(X\) в промежуток \([a, b]\) определяется так:
+  \[\textbf{P}{X \in [a, b]} = F(b) - F(a)\]
+  Следовательно:
+  \[(\textbf{P}\left \{X \in [1; 1,5]\right \} = F(1,5) - F(1) = \frac{(1,5)^2}{8}-\frac{1}{8} = \frac{5}{32}\]
+\end{description}
+
+
+\newpage
+
+
+\section{Предельные теоремы теории вероятностей.}
+\paragraph{Задача}
+Вероятность того, что в некотором автопарке одна автомашина потерпит аварию в течение месяца, принимается равной \(0,001\). В автопарке имеется \(300\) машин. Найти вероятность того, что в течение месяца потерпят аварию не более трех из них.
+\subparagraph{Решение}
+\[n = 300 \text{ - количество машин}\]
+\[p = 0,001 \text{ - вероятность попаднаия машины в аварию}\]
+\[m \text{ - число машин, попавших в аварию}\]
+\[\text{Необходимо найти: } P(0 \leq m \leq 3)\]
+
+\begin{enumerate}
+\item[1)] Формула Бернулли
+  \[P_{m, n} = C_n^mp^mq^{n-m}\]
+  \[P(0 \leq m \leq 3) = P_{0,300} + P_{1,300} + P_{2,300} + P_{3,300}\]
+  \[P_{0,300} = C_{300}^0(0,001)^0(0,999)^{300} \approx 0,74071\]
+  \[P_{1,300} = C_{300}^1(0,001)^1(0,999)^{299} \approx 0,22243\]
+  \[P_{2,300} = C_{300}^2(0,001)^2(0,999)^{298} \approx 0,03329\]
+  \[P_{3,300} = C_{300}^3(0,001)^3(0,999)^{297} \approx 0,00331\]
+  \[P(0 \leq m \leq 3) \approx 0,99974\]
+\item[2)] Интегральная теорема Муавра-Лапласа
+  \[P(m_1 \leq m \leq m_2) \approx \Phi(x_2) - \Phi(x_1)\text{, где: } \]
+  \[\ \ \ \ \Phi(x) = \frac{1}{\sqrt{2\pi}}\cdot\int_0^xe^{-\frac{z^2}{2}}\,dz\text{, } x_2=\frac{m_2-np}{\sqrt{npq}}\text{, } x_1=\frac{m_1-np}{\sqrt{npq}}\]
+  \[x_1 = \frac{0 - 300\cdot0,001}{\sqrt{300\cdot0,001\cdot0,999}} = -\frac{0,3}{\sqrt{0,2997}} \approx -0,55\]
+  \[\Phi(-0,55) = -\Phi(0,55) = -0,20884\]
+  \[x_2 = \frac{3 - 300\cdot0,001}{\sqrt{300\cdot0,001\cdot0,999}} = \frac{2,7}{\sqrt{0,2997}} \approx 4,93\]
+  \[\Phi(4,93) = 0,5\]
+  \[P(0 \leq m \leq 3) \approx 0,5 + 0,20884 = 0,70884\]
+\item[3)] Локальная теорема Муавра-Лапласа
+  \[P_{m,n} \approx \frac{1}{\sqrt{npq}}\cdot\frac{1}{\sqrt{2\pi}}\cdot e^{-\frac{x^2}{2}} = \frac{1}{\sqrt{npq}}\cdot\phi(x)\text{, где }x=\frac{m-np}{\sqrt{npq}}\]
+  \[P(0 \leq m \leq 3) = P_{0,300} + P_{1,300} + P_{2,300} + P_{3,300}\]
+  \[x_0 = -\frac{300\cdot0,001}{\sqrt{300\cdot0,001\cdot0,999}} \approx -0,55\]
+  \[P_{0,300} \approx \frac{1}{\sqrt{0,2997}}\cdot\frac{1}{\sqrt{2\pi}}\cdot e^{-\frac{(-0,55)^2}{2}} \approx 0,62644\]
+  \[x_1 = \frac{1-0,3}{\sqrt{0,2997}} \approx 1,28\]
+  \[P_{1,300} \approx \frac{1}{\sqrt{0,2997}}\cdot\frac{1}{\sqrt{2\pi}}\cdot e^{-\frac{(1,28)^2}{2}} \approx 0,32121\]
+  \[x_2 = \frac{2-0,3}{\sqrt{0,2997}} \approx 3,11\]
+  \[P_{2,300} \approx \frac{1}{\sqrt{0,2997}}\cdot\frac{1}{\sqrt{2\pi}}\cdot e^{-\frac{(3,11)^2}{2}} \approx 0,00578\]
+  \[x_3 = \frac{3-0,3}{\sqrt{0,2997}} \approx 4,93\]
+  \[P_{3,300} \approx \frac{1}{\sqrt{0,2997}}\cdot\frac{1}{\sqrt{2\pi}}\cdot e^{-\frac{(4,93)^2}{2}} \approx 0,00001\]
+  \[P(0 \leq m \leq 3) = 0.95344\]
+\item[4)] Теорема Пуассона
+  \[P_{m,n} \approx \frac{\lambda^{-m}}{m!}e^{\lambda} \text{, где } \lambda=np\]
+  \[P_{0,300} \approx \frac{(300\cdot0,001)^{0}}{0!}e^{-300\cdot0,001} \approx 0.74082\]
+  \[P_{1,300} \approx \frac{(300\cdot0,001)^{1}}{1!}e^{-300\cdot0,001} \approx 0.22225\]
+  \[P_{2,300} \approx \frac{(300\cdot0,001)^{2}}{2!}e^{-300\cdot0,001} \approx 0.03334\]
+  \[P_{3,300} \approx \frac{(300\cdot0,001)^{3}}{3!}e^{-300\cdot0,001} \approx 0.00333\]
+  \[P(0 \leq m \leq 3) \approx 0.99974\]
+\end{enumerate}
+
+\subparagraph{Ответ}
+Теорема Пуассона дала такой же результат, как и формула Бернулли, т.к. по условию данной задачи \(npq = 0.2997 < 10\). И именно поэтому при использовании локальной и интегральной теорем Муавра-Лапласа получился результат с большой погрешностью.
+\[P(0 \leq m \leq 3) = 0.99974\]
+
+\newpage
+
+\paragraph{Задача}
+Доля изделий высшего сорта на данном предприятии составляет \(31\%\). Чему равно наивероятнейшее число изделий высшего сорта и его вероятность в случае отобранной партии из \(75\) изделий?
+\subparagraph{Решение}
+\[n = 75 \text{ - количество испытаний}\]
+\[p = 0,31 \text{ - вероятность успеха испытания}\]
+\[m_0 \text{ - наивероятнейшее число успешных испытаний}\]
+Воспользуемся неравенством: \(np - q \leq m_0 \leq np+p\).
+\[75\cdot0,31-0,69\leq m_0 \leq 75\cdot0,31+0,31\]
+\[22,56 \leq m_0 \leq 23,56 \  \implies \ m_0 = 23\]
+\[npq = 75\cdot0,31\cdot0,69 = 16,0435\]
+Следовательно, мы можем воспользоваться локальной теоремой Муавра-Лапласа для нахождения вероятности \(P_{23,75}\):
+\[x_{23} = \frac{m_0-np}{\sqrt{npq}} = \frac{23-75\cdot0,31}{\sqrt{75\cdot0,31\cdot0,69}} \approx -0,062\]
+\[P_{23,75} = \frac{1}{\sqrt{2\pi}}\cdot e^{-\frac{x_{23}^2}{2}} = \frac{1}{\sqrt{2\pi\cdot75\cdot0,31\cdot0,69}}\cdot e^{-\frac{(-0,062)^2}{2}} \approx 0,09941\]
+
+\subparagraph{Ответ}
+\[m_0 = 23\]
+\[P_{m_0,75} = 0,09941\]
+
+\newpage
+
+\paragraph{Задача}
+При приемке большой партии деталей из них выбрали для испытания \(1000\) штук. Партия бракуется, если среди выбранных деталей окажется \(75\) или более бракованных. Какова вероятность принятия партии, если фактически брака \(10\%\)?
+\subparagraph{Решение}
+\[n = 1000 \text{ - число деталей в партии}\]
+\[m_1 = 75\text{, }m_2 = 1000\]
+\[p = 0.1 \text{ - вероятность того, что деталь бракованная}\]
+\[P(75 \leq m \leq 1000) \text{ - вероятность того, что партия не будет принята}\]
+\[npq = 1000\cdot0,1\cdot0,9 = 90\]
+Следовательно, мы можем воспользоваться интегральной теоремой Муавра-Лапласа для решения задачи.
+ \[P(m_1 \leq m \leq m_2) \approx \Phi(x_2) - \Phi(x_1)\text{, где: } \]
+  \[\ \ \ \ \Phi(x) = \frac{1}{\sqrt{2\pi}}\cdot\int_0^xe^{-\frac{z^2}{2}}\,dz\text{, } x_2=\frac{m_2-np}{\sqrt{npq}}\text{, } x_1=\frac{m_1-np}{\sqrt{npq}}\]
+  \[x_1 = \frac{75 - 1000\cdot0,1}{\sqrt{1000\cdot0,1\cdot0,9}} = -\frac{25}{\sqrt{90}} \approx -2,64\]
+  \[\Phi(-2,64) = -\Phi(2,64) = -0,49585\]
+  \[x_2 = \frac{1000 - 1000\cdot0,1}{\sqrt{1000\cdot0,1\cdot0,9}} = \frac{900}{\sqrt{90}} \approx 94,87\]
+  \[\Phi(94,87) = 0,5\]
+  \[P(75 \leq m \leq 1000) \approx 0,5 + 0,49585 = 0,99585\]
+\subparagraph{Ответ}
+\[P(75 \leq m \leq 1000) = 0,99585\]
+\end{document}
