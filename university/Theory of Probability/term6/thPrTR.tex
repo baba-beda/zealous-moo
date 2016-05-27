@@ -7,6 +7,7 @@
 \newcommand\abs[1]{\left|#1\right|}
 \usepackage{pgfplots}
 \usepackage{multirow}
+\usetikzlibrary{intersections}
 
 \title{Типовой расчет по Теории Вероятностей}
 \author{Зенкова Дарья, M3336}
@@ -35,7 +36,7 @@
 \subsection{Решение}
 \begin{itemize}
 \item[а)] Пусть \(D_v\) - множество значений случайной величины \(X\), для которых \(y=g(x)=x^2 < v\): \(D_v=\{x : y = x^2 < v\}\). \\
-При \(v \leq 0\) \(D_v = \emptyset \implies\) \mbox{\(F_Y(v) =\textbf{P}\{Y\in D_v\} = 0\)} \(\implies f_Y(v) = 0\) при \(v \leq 0\).
+При \(v \leq 0\) \(D_v = \emptyset \implies\) \mbox{\(F_Y(v) =\textbf{P}\{Y\in D_v\} = 0\)} \(\implies f_Y(v) = 0\) при \(v \leq 0\).77
 При \(v > 0\) \(D_v\) имеет вид:
 \[D_v = \{x : x^2 < v\} = \{x : -\sqrt{v} < x < \sqrt{v}\}\]
 Тогда функция распределения \(Y\):
@@ -101,7 +102,88 @@
   \hline
 \end{tabular}
 \end{center}
-Найти условные ожидания \(\textbf(E)(X|Y)\) и \(\textbf{E}(Y|X)\), проверить формулу полного математического ожидания. Построить линейную регрессию \(X\) на \(Y\) и \(Y\) на \(X\) и вычислить значения этих функций в точках \(x_i\) и \(y_j\). Геометрически сравнить значения регрессии и линейной регрессии.
+Найти условные ожидания \(\textbf{E}(X|Y)\) и \(\textbf{E}(Y|X)\), проверить формулу полного математического ожидания. Построить линейную регрессию \(X\) на \(Y\) и \(Y\) на \(X\) и вычислить значения этих функций в точках \(x_i\) и \(y_j\). Геометрически сравнить значения регрессии и линейной регрессии.
 \subsection{Решение}
+\[\textbf{E}(Y|X) = \textbf{E}(Y|T=\{X^{-1}(x_j)\}) = \sum\limits_j^{}\textbf{E}(Y|X^{-1}(x_j))I_{X^{-1}(x_j)} = \sum\limits_j^{}\textbf{E}(Y|X=x_j)I_{C_j}\text{,}\]
+где \(T = \{C_j\}_j \text{, } C_j = X^{-1}(x_j) = \{\omega : X(\omega) = x_j\} \text{, } x_i \ne x_j \ \forall i \ne j\).
+Найдем условное математическое ожидание \(\textbf{E}(Y|X) = m_{Y|X}(x)\):
+\[\textbf{E}(Y|X=x_i) = y_1\cdot\frac{\textbf{P}(Y=y_1|X=x_i)}{\textbf{P}(X=x_i)} + y_2 \cdot\frac{\textbf{P}(Y=y_2|X=x_i)}{\textbf{P}(X=x_i)}\]
+\[\textbf{E}(Y|X=-2) = -2\cdot\frac{0.05}{0.05+0.25} + 2\cdot\frac{0.25}{0.05+0.25} = \frac{4}{3}\]
+\[\textbf{E}(Y|X=0) = 1\]
+\[\textbf{E}(Y|X=2) = -\frac{2}{3}\]
+\[\textbf{E}(Y|X=4) = 0\]
+\[\textbf{E}(Y|X) = \frac{4}{3}I_{X=-2}+I_{X=0}-\frac{2}{3}I_{X=2}\]
+Найдем условное математическое ожидание \(\textbf{E}(X|Y)=m_{X|Y}(y)\):
+\[\textbf{E}(X|Y=-2) = \frac{7}{4}\]
+\[\textbf{E}(X|Y=2) = \frac{1}{6}\]
+\[\textbf{E}(X|Y) = \frac{7}{4}I_{Y=-2}+\frac{1}{6}I_{Y=2}\]
+\paragraph{Def} \(g^{*}(x)\) - функция линейной регрессии \(Y\) на \(X\), если:
+\[\inf\limits_{g(x)=ax+b}{\textbf{E}(Y-g(X))^2} = \textbf{E}(Y-g^{*}(X))^2\]
+\[g^{*}(x) = a^{*}x+b^{*}\]
+\[a^{*} = \frac{\textbf{cov}(X,Y)}{\textbf{D}X}\text{, } b^{*} = \textbf{E}Y - a^{*}\textbf{E}X\]
+Пусть \(g(x) = ax + b\) - линейная регрессия \(Y\) на \(X\), \(h(y) = cy + d\) - линейная регрессия \(X\) на \(Y\). Для начала найдем все необходимые моменты:
+\[\textbf{cov}(X,Y) = \textbf{E}((X-\textbf{E}X)(Y-\textbf{E}Y)) = \textbf{E}(XY) - \textbf{E}X\cdot\textbf{E}Y\]
+\[\textbf{E}(XY) = \sum\limits_{i=1}^{4}{\sum\limits_{j=1}^{2}{x_iy_j\textbf{P}(X=x_i,Y=y_j)}} = -1.2\]
+\[\textbf{E}X = \sum\limits_{i=1}^4{x_i\textbf{P}(X=x_i)} = 0.8\]
+\[\textbf{E}Y = \sum\limits_{j=1}^2{y_j\textbf{P}(Y=y_j)} = 0.4\]
+\[\textbf{cov}(X,Y) = -1.2 - 0.8\cdot0.4 = -1.52\]
+\[\textbf{E}(X^2) = 5.6\]
+\[\textbf{E}(Y^2) = 4\]
+\[\textbf{D}X = \textbf{E}(X^2) - (\textbf{E}X)^2 = 5.6 - 0.64 = 4.96\]
+\[\textbf{D}Y = \textbf{E}(Y^2) - (\textbf{E}Y)^2 = 4 - 0.16 = 3.84\]
+Теперь можем найти все коэффициенты:
+\[a = \frac{\textbf{cov}(X, Y)}{\textbf{D}X} = \frac{-1.52}{4.96} = -\frac{19}{62}\]
+\[b = \textbf{E}Y - a\textbf{E}X = 0.4 + \frac{19}{62}\cdot0.8 = \frac{20}{31}\]
+\[c = \frac{\textbf{cov}(X, Y)}{\textbf{D}Y} = \frac{-1.52}{3.84} = -\frac{19}{48}\]
+\[d = \textbf{E}X - c\textbf{E}Y = 0.8  + \frac{19}{48}\cdot0.4 = \frac{23}{24}\]
+Таким образом, искомые линейные регрессии имеют следующий вид:
+\[g(x) = -\frac{19}{62}x+\frac{20}{31}\]
+\[h(y) = -\frac{19}{48}y + \frac{23}{24}\]
+Сравним получившиеся регрессии и линейные регрессии.
+
+\begin{center}
+\begin{tikzpicture}
+  \begin{axis}[
+      title=\(Y\) на \(X\),
+      axis lines = middle, axis line style = {->},
+      xlabel={x},
+      ylabel={t},
+      xtick={-2,-1,0,1,2,3,4},
+      ytick={-4,-3,-2,-1,0,1,2,3,4}]
+    \addplot[color=blue,domain=-2.1:4.1,mark=none]{-19/62*x + 20/31};
+    \legend{Линейная регрессия, Регрессия};
+    \addplot[color=red,mark=*] coordinates {
+      (-2, 4/3)
+      (0, 1)
+      (2, -2/3)
+      (4,0)
+    };
+  \end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}
+  \begin{axis}[
+      title=\(X\) на \(Y\),
+      axis lines = middle, axis line style = {->},
+      xlabel={y},
+      xtick={-2,-1,0,1,2},
+      ytick={-2,-1,0,1,2,3,4,5,6},
+      ylabel={t}]
+    \addplot[color=blue,domain=-2.1:2.1,mark=none]{-19/48*x+23/24};
+    \addplot[color=red,mark=*] coordinates {
+      (-2, 7/4)
+      (2, 1/6)
+    };
+    \legend{Линейная регрессия, Регрессия};
+  \end{axis}
+\end{tikzpicture}
+\end{center}
+\subsection{Ответ}
+\[E(Y|X) = m_{Y|X}(x) =  \frac{4}{3}I_{X=-2}+I_{X=0}-\frac{2}{3}I_{X=2}\]
+\[E(X|Y) = m_{X|Y}(y) =  \frac{7}{4}I_{Y=-2}+\frac{1}{6}I_{Y=2}\]
+\[g(x) = -\frac{180}{119}x+\frac{958}{595}\]
+\[h(y) = -\frac{90}{49}y + \frac{54}{35}\]
 
 \end{document}
