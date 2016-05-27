@@ -1,0 +1,107 @@
+\documentclass[fleqn, 10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+\usepackage[T2A]{fontenc}
+\usepackage{mathtools}
+\usepackage{units}
+\newcommand\abs[1]{\left|#1\right|}
+\usepackage{pgfplots}
+\usepackage{multirow}
+
+\title{Типовой расчет по Теории Вероятностей}
+\author{Зенкова Дарья, M3336}
+\date{Вариант 2}
+
+\begin{document}
+\pagenumbering{gobble}
+\maketitle
+\newpage
+\pagenumbering{arabic}
+
+\section{Функции случайных величин}
+\subsection{Задача}
+Функция распределения \(F_X(t)\) случайной величины \(X\) имеет вид:
+\[F_X(t) =
+\begin{cases}
+  1 - e^{-t}, & t \geq 0 \\
+  0, & t < 0
+\end{cases}\]
+Случайные величины \(Y = X^2\) и \(Z=-3X+2\) являются функциями от случайной величины \(X\).
+Найти:
+\begin{description}
+\item[а)] плотность распределения \(f_y(v)\) случайной величины \(Y\);
+\item[б)] моменты \(\textbf{E}Z\), \(\textbf{D}Z\), \(\textbf{cov}(X,Z)\).
+\end{description}
+\subsection{Решение}
+\begin{itemize}
+\item[а)] Пусть \(D_v\) - множество значений случайной величины \(X\), для которых \(y=g(x)=x^2 < v\): \(D_v=\{x : y = x^2 < v\}\). \\
+При \(v \leq 0\) \(D_v = \emptyset \implies\) \mbox{\(F_Y(v) =\textbf{P}\{Y\in D_v\} = 0\)} \(\implies f_Y(v) = 0\) при \(v \leq 0\).
+При \(v > 0\) \(D_v\) имеет вид:
+\[D_v = \{x : x^2 < v\} = \{x : -\sqrt{v} < x < \sqrt{v}\}\]
+Тогда функция распределения \(Y\):
+\[F_Y(v) = \textbf{P}\{-\sqrt{v} < X < \sqrt{v}\} = F_X(\sqrt{v}) - F_X(-\sqrt{v}) = 1 - e^{\sqrt{v}}\]
+Дифференцируя по \(v\), получим плотность распределения \(Y\):
+\[f_Y(v) = (1 - e^{\sqrt{v}})' = -e^{\sqrt{v}}\cdot\frac{1}{2\sqrt{v}}\]
+Таким образом,
+\[f_Y(v) =
+\begin{cases}
+  -\frac{e^{\sqrt{v}}}{2\sqrt{v}}, & v > 0 \\
+  0, & v \leq 0
+\end{cases}
+\]
+\item[б)] Пусть \(Z = -3X + 2\).
+  Для начала найдем плотность распределения \(X\):
+  \[f_X(t) =
+  \begin{cases}
+    e^{-t}, & t \geq 0 \\
+    0, & t < 0
+  \end{cases}
+  \]
+  Математическое ожидание случайной величины \(X\):
+  \[\textbf{E}X = \int\limits_{-\infty}^{\infty}{tf_X(t)dt} = \int\limits_{0}^{\infty}{te^{-t}dt} = 1\]
+  Математическое ожидание \(X^2\):
+  \[\textbf{E}(X^2) = \int\limits_{0}^{\infty}{t^2e^{-t}dt} = 2\]
+  Дисперсия случайной величины \(X\):
+  \[\textbf{D}X = \textbf{E}(X^2) - (\textbf{E}X)^2 = 2 - 1 = 1\]
+  Воспользуемся линейностью математического ожидания, чтобы найти \(\textbf{E}Z\):
+  \[\textbf{E}Z = \textbf{E}(-3X+2) = -3\textbf{E}X + 2 = -1\].
+  Дисперсия \(Z\):
+  \[\textbf{D}Z = \textbf{D}(-3X+2) = 9\textbf{D}X = 9\]
+  Воспользуемся следующим свойством ковариации:
+  \[\textbf{cov}(aX+b, cY+d) = ab\textbf{cov}(X,Y)\]
+  Тогда ковариация случайных величин \(X\) и \(Z\):
+  \[\textbf{cov}(X, Z) = \textbf{cov}(X, -3X+2) = -3\textbf{cov}(X, X) = -3\textbf{D}X = -3\]
+  \end{itemize}
+\subsection{Ответ}
+\begin{itemize}
+\item[а)]
+  \[f_Y(v) =
+\begin{cases}
+  -\frac{e^{\sqrt{v}}}{2\sqrt{v}}, & v > 0 \\
+  0, & v \leq 0
+\end{cases}
+\]
+\item[б)] \(\textbf{E}Z = -1\), \(\textbf{D}Z = 9\), \(\textbf{cov}(X,Z) = -3\)
+\end{itemize}
+
+\section{Регрессия. Случай дискретных случайных величин}
+\subsection{Задача}
+Случайный вектор \((X,Y)\) задан матрией распределения:
+\begin{center}
+\begin{tabular}{
+    | c | c | c | c | c | }
+  \hline
+  \multirow{2}{1em}{\(Y\)} & \multicolumn{4}{|c|}{\(X\)} \\
+  \cline{2-5}
+  & \(-2\) & \(0\) & \(2\) & \(4\) \\
+  \hline
+  \(-2\) & \(0.05\) & \(0.05\) & \(0.2\) & \(0.1\) \\
+  \hline
+  \(2\) & \(0.25\) & \(0.15\) & \(0.1\) & \(0.1\) \\
+  \hline
+\end{tabular}
+\end{center}
+Найти условные ожидания \(\textbf(E)(X|Y)\) и \(\textbf{E}(Y|X)\), проверить формулу полного математического ожидания. Построить линейную регрессию \(X\) на \(Y\) и \(Y\) на \(X\) и вычислить значения этих функций в точках \(x_i\) и \(y_j\). Геометрически сравнить значения регрессии и линейной регрессии.
+\subsection{Решение}
+
+\end{document}
