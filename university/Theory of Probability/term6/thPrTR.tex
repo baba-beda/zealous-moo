@@ -84,7 +84,7 @@
 \]
 \item[б)] \(\textbf{E}Z = -1\), \(\textbf{D}Z = 9\), \(\textbf{cov}(X,Z) = -3\)
 \end{itemize}
-\newpage:print
+\newpage
 \section{Регрессия. Случай дискретных случайных величин}
 \subsection{Задача}
 Случайный вектор \((X,Y)\) задан матрией распределения:
@@ -117,18 +117,19 @@
 \[\textbf{E}(X|Y=-2) = \frac{7}{4}\]
 \[\textbf{E}(X|Y=2) = \frac{1}{6}\]
 \[\textbf{E}(X|Y) = \frac{7}{4}I_{Y=-2}+\frac{1}{6}I_{Y=2}\]
+\[\textbf{E}X = \sum\limits_{i=1}^4{x_i\textbf{P}(X=x_i)} = 0.8\text{, }\textbf{E}Y = \sum\limits_{j=1}^2{y_j\textbf{P}(Y=y_j)} = 0.4\]
+Проверим формулу полного математического ожидания:
+\[\textbf{E}(\textbf{E}(Y|X)) = \sum\limits_{i=1}^{4}{\textbf{E}(Y|X=x_i)\textbf{P}(X=x_i)} = \frac{4}{3}\cdot0.3+1\cdot0.2+0\cdot0.3-\frac{2}{3}\cdot0.2 = 0.4 = \textbf{E}Y\]
+\[\textbf{E}(\textbf{E}(X|Y)) = \sum\limits_{j=1}^{2}{\textbf{E}(X|Y=y_j)\textbf{P}(Y=y_j)} = \frac{7}{4}\cdot0.4 + \frac{1}{6}\cdot0.6 = 0.8 = \textbf{E}X\]
 \paragraph{Def} \(g^{*}(x)\) - функция линейной регрессии \(Y\) на \(X\), если:
 \[\inf\limits_{g(x)=ax+b}{\textbf{E}(Y-g(X))^2} = \textbf{E}(Y-g^{*}(X))^2\]
-\[g^{*}(x) = a^{*}x+b^{*}\]
-\[a^{*} = \frac{\textbf{cov}(X,Y)}{\textbf{D}X}\text{, } b^{*} = \textbf{E}Y - a^{*}\textbf{E}X\]
+\[g^{*}(x) = a^{*}x+b^{*}\text{, }
+a^{*} = \frac{\textbf{cov}(X,Y)}{\textbf{D}X}\text{, } b^{*} = \textbf{E}Y - a^{*}\textbf{E}X\]
 Пусть \(g(x) = ax + b\) - линейная регрессия \(Y\) на \(X\), \(h(y) = cy + d\) - линейная регрессия \(X\) на \(Y\). Для начала найдем все необходимые моменты:
 \[\textbf{cov}(X,Y) = \textbf{E}((X-\textbf{E}X)(Y-\textbf{E}Y)) = \textbf{E}(XY) - \textbf{E}X\cdot\textbf{E}Y\]
 \[\textbf{E}(XY) = \sum\limits_{i=1}^{4}{\sum\limits_{j=1}^{2}{x_iy_j\textbf{P}(X=x_i,Y=y_j)}} = -1.2\]
-\[\textbf{E}X = \sum\limits_{i=1}^4{x_i\textbf{P}(X=x_i)} = 0.8\]
-\[\textbf{E}Y = \sum\limits_{j=1}^2{y_j\textbf{P}(Y=y_j)} = 0.4\]
 \[\textbf{cov}(X,Y) = -1.2 - 0.8\cdot0.4 = -1.52\]
-\[\textbf{E}(X^2) = 5.6\]
-\[\textbf{E}(Y^2) = 4\]
+\[\textbf{E}(X^2) = 5.6\text{, }\textbf{E}(Y^2) = 4\]
 \[\textbf{D}X = \textbf{E}(X^2) - (\textbf{E}X)^2 = 5.6 - 0.64 = 4.96\]
 \[\textbf{D}Y = \textbf{E}(Y^2) - (\textbf{E}Y)^2 = 4 - 0.16 = 3.84\]
 Теперь можем найти все коэффициенты:
