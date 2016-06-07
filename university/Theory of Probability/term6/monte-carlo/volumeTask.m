@@ -8,3 +8,12 @@ function [] = volumeTask()
   [left2, right2] = confidenceInt(vol2, 0.64, disp2, 1000000);
   printf("n = %d: %f <= V <= %f\n", 1000000, left2, right2);
 endfunction
+
+function [volume, disp] = functionVolume(n, k, c, a)
+  X = unifrnd(0, 1, k, n);
+  y = sum(X .^ a);
+  res = y <= c;
+  volume = mean(res);
+  disp = dispersion(res);
+endfunction
+ 
