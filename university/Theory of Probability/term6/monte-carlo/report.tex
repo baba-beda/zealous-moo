@@ -1,0 +1,70 @@
+\documentclass[fleqn, 10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+\usepackage[T2A]{fontenc}
+\usepackage{mathtools}
+\usepackage{units}
+\newcommand\abs[1]{\left|#1\right|}
+\usepackage{pgfplots}
+\usepackage{multirow}
+\usetikzlibrary{intersections}
+
+\title{Метод Монте-Карло}
+\author{Зенкова Дарья, M3336}
+\date{Вариант 2}
+
+\begin{document}
+\pagenumbering{gobble}
+\maketitle
+\pagenumbering{arabic}
+
+\section{Оценка объема}
+\subsection{Задача}
+Методом Монте-Карло оценить объем части тела \(\{F(\overline{x}) \leq c\}\), заключенной в \(k\)-мерном кубе с ребром \([0, 1]\). Функция имеет вид \(F(\overline{x}) = f(x_1) + f(x_2) + ... + f(x_k)\). Для выбранной надежности \(\gamma \geq 0.95\) указать асимптотическую точность оценивания и построить асимптотический доверительный интервал для истинного значения объема.\\
+\(f(x) = x^3\), размерность \(k = 6\), \(c = 1.4\), объем выборки \(n = 10^4\) и \(n = 10^6\).
+\subsection{Решение}
+Порядок действий:
+\begin{itemize}
+\item[1)] Для начала сгенерируем \(n\) случайных точек в заданном \(k\)-мерном кубе.
+\item[2)] Вычислим функцию \(F(\overline{x})\) в каждой из точек.
+\item[3)] Заведем множество \(In = \{p_i | 0 \ if \ F(\overline{x_i}) > c,1\ otherwise\}\).
+\item[4)] Вычислим среднее: \(mean(In) = m\). Это и будет математическим ожиданием объема тела.
+\item[5)] Далее найдем границы доверительного интервала. Для этого нам понадобится \(\sigma\) - среднеквадратичное отклонение, \(t : \Phi(t) = \frac{\gamma}{2}\). Для данного \(\gamma\) \(t = 0.64\). Доверительный интервал выглядит так: \[m - t\frac{\sigma}{n} \leq V \leq m + t\frac{\sigma}{n}\].
+  
+\end{itemize}
+\subsection{Результат}
+\[n = 10^4: \ 0.470005 \leq V \leq 0.476395\]
+\[n = 10^6: \ 0.473600 \leq V \leq 0.474240\]
+
+\section{Оценка интеграла}
+\subsection{Задача}
+Построить оценку интегралов:
+\[\text{a)} \int\limits_{2}^{5}{ln(1+x^2)dx}\]
+\[\text{b)} \int\limits_{-\infty}^{\infty}{cos(x)e^{-\frac{(x+3)^2}{4}}dx}\]
+\subsection{Решение}
+Приближение интеграла можно рассматривать так:
+\[\int\limits_{a}^{b}{f(x)dx} = (b - a)\textbf{E}(f(x))\text{, }\]
+где математическое ожидание функции рассматривается как среднее по полученным значениям на выборке.\\
+Второй интеграл имеет бесконечные границы, соответственно необходимо сделать такую замену, что границы будут конечными.
+\[\int\limits_{-\infty}^{\infty}{cos(x)e^{-\frac{(x+3)^2}{4}}dx} = \int\limits_{-\infty}^{-3}{cos(x)e^{-\frac{(x+3)^2}{4}}dx} + \int\limits_{-3}^{\infty}{cos(x)e^{-\frac{(x+3)^2}{4}}dx}\]
+Сделаем в первом интеграле замену \(u = \frac{x+3}{2}\):
+\[\int\limits_{-\infty}^{-3}{cos(x)e^{-\frac{(x+3)^2}{4}}dx} = 2\int\limits_{-\infty}^0{cos(2u-3)e^{-u^2}du}\]
+Далее сделаем замену \(t = -u\):
+\[\int\limits_{-\infty}^0{cos(2u-3)e^{-u^2}} = \int\limits_{0}^{\infty}{cos(-2t-3)e^{-t^2}}dt\]
+Замена \(r = \frac{1}{t+1}\).
+\[\int\limits_{0}^{\infty}{cos(-2t-3)e^{-t^2}dt} = \int\limits_{0}^{1}{cos(-\frac{2}{r}-1)e^{-\frac{(1-r)^2}{r^2}}\frac{1}{r^2}dr}\]
+Аналогично:
+\[\int\limits_{-3}^{\infty}{cos(x)e^{-\frac{(x+3)^2}{4}}dx} = 2\int\limits_{0}^{1}{cos(\frac{2}{r}-5)e^{-\frac{(1-r)^2}{r^2}}\frac{1}{r^2}dr}\]
+В итоге:
+\[\int\limits_{-\infty}^{\infty}{cos(x)e^{-\frac{(x+3)^2}{4}}dx} = 2\int\limits_{0}^{1}{(cos(\frac{2}{r}-5) + cos(-\frac{2}{r}-1))e^{-\frac{(1-r)^2}{r^2}}\frac{1}{r^2}dr}\]
+\subsection{Результат}
+\begin{itemize}
+\item[a)] \(I = \int\limits_{2}^{5}{ln(1+x^2)dx} \approx 7.6041\)
+\[n=10^4: \ 7.586897 \leq I \leq 7.605158\]
+\[n=10^6: \ 7.601046 \leq I \leq 7.602853\]
+\item[b)] \(I = \int\limits_{-\infty}^{\infty}{cos(x)e^{-\frac{(x+3)^2}{4}}dx}\approx -1.29105\)
+\[n=10^4: \ -1.319270 \leq I \leq -1.284359 \]
+\[n=10^6: \ -1.293289 \leq I \leq -1.289793\]
+\end{itemize}
+
+\end{document}
